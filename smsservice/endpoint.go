@@ -6,9 +6,9 @@ import (
 )
 
 type SmsRequest struct {
-	From string
-	To string
-	Text string
+	From string `json:"from"`
+	To string `json:"to"`
+	Text string `json:"text"`
 }
 
 func makeInboundSmsEndpoint(service SmsService) endpoint.Endpoint {

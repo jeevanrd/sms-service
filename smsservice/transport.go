@@ -66,7 +66,6 @@ func decodeOutboundSms(c context.Context, r *http.Request) (interface{}, error) 
 func validateRequest(body []byte) (SmsRequest,error) {
 	var payload map[string]string
 	err := json.Unmarshal(body, &payload)
-
 	if(err != nil) {
 		return SmsRequest{}, statusErrors.New(errors.New("invalid payload"), 400)
 	}
@@ -77,6 +76,7 @@ func validateRequest(body []byte) (SmsRequest,error) {
 	}
 
 	length := len(from)
+
 	if (!(length >= 6 && length <= 16)) {
 		return SmsRequest{}, statusErrors.New(errors.New("from is invalid"), 400)
 	}

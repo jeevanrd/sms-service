@@ -22,14 +22,6 @@ type smsService struct {
 	cache utils.Cache
 }
 
-type InboundSmsResponse struct {
-
-}
-
-type OutboundSmsResponse struct {
-
-}
-
 type  Response struct {
 	Message		string `json:"message"`
 	Error		string `json:"error"`
@@ -41,7 +33,7 @@ func (s *smsService) InboundSms(ctx context.Context, req SmsRequest) (interface{
 	_,err := s.db.GetPhoneNumber(account.Id, req.To)
 
 	if (err != nil) {
-		return InboundSmsResponse{}, statusErrors.New(errors.New("to parameter not found"), http.StatusNotFound)
+		return Response{}, statusErrors.New(errors.New("to parameter not found"), http.StatusNotFound)
 	}
 
 	text := replaceNewLines(req.Text);
@@ -62,7 +54,7 @@ func (s *smsService) OutboundSms(ctx context.Context, req SmsRequest) (interface
 	_,err := s.db.GetPhoneNumber(account.Id, req.From)
 
 	if(err != nil) {
-		return InboundSmsResponse{}, statusErrors.New(errors.New("from parameter not found"), http.StatusNotFound)
+		return Response{}, statusErrors.New(errors.New("from parameter not found"), http.StatusNotFound)
 	}
 
 	toFromPair := req.To + "_stop_" + req.From
@@ -71,13 +63,13 @@ func (s *smsService) OutboundSms(ctx context.Context, req SmsRequest) (interface
 	val,err := s.cache.GetIntValueFromCache(toFromPair)
 
 	if (val > 0) {
-		return InboundSmsResponse{}, statusErrors.New(errors.New("sms from " + req.From + " to " + req.To  + " blocked by STOP request"), http.StatusBadRequest)
+		return Response{}, statusErrors.New(errors.New("sms from " + req.From + " to " + req.To  + " blocked by STOP request"), http.StatusBadRequest)
 	}
 
 	val,err = s.cache.GetIntValueFromCache(fromToPair)
 
 	if(val > 0) {
-		return InboundSmsResponse{}, statusErrors.New(errors.New("sms from " + req.From + " to " + req.To  + " blocked by STOP request"), http.StatusBadRequest)
+		return Response{}, statusErrors.New(errors.New("sms from " + req.From + " to " + req.To  + " blocked by STOP request"), http.StatusBadRequest)
 	}
 
 	key := "from_" + req.From;
@@ -85,7 +77,7 @@ func (s *smsService) OutboundSms(ctx context.Context, req SmsRequest) (interface
 
 	if(count > 0) {
 		if(count >= 50) {
-			return InboundSmsResponse{}, statusErrors.New(errors.New("limit reached for from " + req.From), http.StatusTooManyRequests)
+			return Response{}, statusErrors.New(errors.New("limit reached for from " + req.From), http.StatusTooManyRequests)
 		}
 		s.cache.Increment(key, 1);
 	} else {

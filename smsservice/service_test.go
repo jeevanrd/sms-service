@@ -73,7 +73,7 @@ var _ = Describe("Sms Service", func() {
 			})
 
 
-			It("should get not found", func() {
+			It("should get blocked error", func() {
 				var sampleSmsR1 = smsservice.SmsRequest{From:mockData.Phone1.Number,To:mockData.Phone2.Number,Text:"stop"}
 				_,err := is.InboundSms(ctx,sampleSmsR1)
 				_,err = is.OutboundSms(ctx,sampleSmsR1)

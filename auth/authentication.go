@@ -7,7 +7,6 @@ import (
 	"github.com/jeevanrd/sms-service/database"
 	"context"
 	"encoding/json"
-	"fmt"
 )
 
 type  Response struct {
@@ -63,7 +62,6 @@ func (a *Auth) AuthHandler(h http.Handler) http.Handler {
 
 		account, err := a.Repo.GetAccount(pair[0], pair[1])
 		if(err != nil) {
-			fmt.Println(err)
 			buildResponse(w, "Please pass valid credentials", http.StatusForbidden)
 			return
 		}

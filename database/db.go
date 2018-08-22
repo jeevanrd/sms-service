@@ -23,9 +23,9 @@ func (r *Repo)  GetPhoneNumber(accountId int, number string) (PhoneNumber, error
 	return phone, err
 }
 
-func NewDatabaseRepo(dbUser string, dbName string) (*Repo, error) {
+func NewDatabaseRepo(dbUser,password,dbName,dbhost string) (*Repo, error) {
 	Repo := &Repo{
-		db:   GetDbConnection(dbUser,dbName),
+		db:   GetDbConnectionWithOptions(dbUser,password,dbName,dbhost),
 	}
 	return Repo, nil
 }

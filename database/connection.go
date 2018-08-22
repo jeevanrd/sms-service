@@ -10,3 +10,15 @@ func GetDbConnection(dbUser string, dbName string) *pg.DB {
 	})
 	return db
 }
+
+
+func GetDbConnectionWithOptions(dbUser string, password string, dbName string, hostName string) *pg.DB {
+	db := pg.Connect(&pg.Options{
+		User:dbUser,
+		Password:password,
+		Database:dbName,
+		Addr:hostName,
+	})
+	return db
+}
+

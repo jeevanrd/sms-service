@@ -28,11 +28,11 @@ func (a *Auth) ContentTypeHandler(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		contentType := r.Header.Get("Content-Type")
 		if (contentType == "") {
-			buildResponse(w, "unprocessable entity", http.StatusUnprocessableEntity)
+			buildResponse(w, "Unsupported Media Type", http.StatusUnsupportedMediaType)
 			return
 		}
 		if(strings.ToLower(contentType) != "application/json") {
-			buildResponse(w, "unprocessable entity", http.StatusUnprocessableEntity)
+			buildResponse(w, "Unsupported Media Type", http.StatusUnsupportedMediaType)
 			return
 		}
 		h.ServeHTTP(w, r)
@@ -67,10 +67,7 @@ func (a *Auth) AuthHandler(h http.Handler) http.Handler {
 		}
 
 		var ctx context.Context
-		ctx = context.WithValue(ctx, "url-parameters", r.URL.Query())
-		ctx = context.WithValue(ctx, "request-method", r.Method)
 		ctx = context.WithValue(ctx, "account", account)
-
 		reqWithContext := r.WithContext(ctx)
 		h.ServeHTTP(w, reqWithContext)
 	})

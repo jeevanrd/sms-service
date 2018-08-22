@@ -12,6 +12,10 @@ import (
 	"net/http"
 )
 
+const (
+	THROTTLE_LIMIT = 50
+)
+
 type SmsService interface {
 	InboundSms(ctx context.Context, req SmsRequest) (interface{},error)
 	OutboundSms(ctx context.Context, req SmsRequest) (interface{},error)
@@ -19,7 +23,7 @@ type SmsService interface {
 
 type smsService struct {
 	db database.Repository
-	cache utils.Cache
+	cache utils.LocalCache
 }
 
 type  Response struct {
@@ -76,7 +80,7 @@ func (s *smsService) OutboundSms(ctx context.Context, req SmsRequest) (interface
 	count,err := s.cache.GetIntValueFromCache(key)
 
 	if(count > 0) {
-		if(count >= 50) {
+		if(count >= THROTTLE_LIMIT) {
 			return Response{}, statusErrors.New(errors.New("limit reached for from " + req.From), http.StatusTooManyRequests)
 		}
 		s.cache.Increment(key, 1);
@@ -94,7 +98,7 @@ func replaceNewLines(val string) string {
 }
 
 //NewService creates new InstanceService
-func NewService(repo database.Repository, cache utils.Cache) SmsService {
+func NewService(repo database.Repository, cache utils.LocalCache) SmsService {
 	glog.Info("Creating a new instance service with:", "Repository", repo)
 	return &smsService{db: repo, cache:cache}
 }

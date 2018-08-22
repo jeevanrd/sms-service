@@ -35,7 +35,7 @@ var _ = Describe("Sms Service", func() {
 
 	var is smsservice.SmsService
 	redisClient := utils.GetCacheClient()
-	is = smsservice.NewService(mockDatabaseRepo, utils.Cache{Client:redisClient})
+	is = smsservice.NewService(mockDatabaseRepo, utils.LocalCache{Client:redisClient})
 
 	Describe("GET /inbound/sms", func() {
 		Context("test inbound", func() {

@@ -35,7 +35,7 @@ func (c *LocalCache) GetIntValueFromCache(key string) (int64, error) {
 	if (exist) {
 		return val.(int64), nil
 	}
-	return int64(0), errors.New("key not foun")
+	return int64(0), errors.New("key not found")
 }
 
 func (c *LocalCache) Increment(key string, value int64) {

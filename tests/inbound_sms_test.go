@@ -33,7 +33,7 @@ func TestInboundSmsMethodContentType(t *testing.T) {
 
 	assert.Equal(t, 415, resp.StatusCode)
 	assert.Equal(t, result.Message, "")
-	assert.Equal(t, result.Error, "Unsupported Media Type")
+	assert.Equal(t, result.Error, "invalid content type")
 }
 
 func TestInboundSmsNonPostMethods(t *testing.T) {

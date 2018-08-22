@@ -28,11 +28,11 @@ func (a *Auth) ContentTypeHandler(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		contentType := r.Header.Get("Content-Type")
 		if (contentType == "") {
-			buildResponse(w, "Unsupported Media Type", http.StatusUnsupportedMediaType)
+			buildResponse(w, "invalid content type", http.StatusUnsupportedMediaType)
 			return
 		}
 		if(strings.ToLower(contentType) != "application/json") {
-			buildResponse(w, "Unsupported Media Type", http.StatusUnsupportedMediaType)
+			buildResponse(w, "invalid content type", http.StatusUnsupportedMediaType)
 			return
 		}
 		h.ServeHTTP(w, r)
